@@ -1,4 +1,11 @@
 # Thermal3D-GS: Physics-induced 3D Gaussians for Thermal Infrared Novel-view Synthesis
+
+## News
+
+- **[5/18/2024]** All comparison plots and training weights based on the ThermoScenes dataset released. 6 scenes in TI-NSD have been compiled and released. 3 comparative videos of UAV scenes reorganized and released.
+- **[4/21/2024]** Full code released.
+
+
 ## Running
 
 To run the optimizer, simply use
