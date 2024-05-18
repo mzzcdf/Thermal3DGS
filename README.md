@@ -255,8 +255,16 @@ python convert.py -s <location> --skip_matching [--resize] #If not resizing, Ima
 ![Visual Comparisons for ThermoScenes Dataset Between 3D-GS and Our Method. BS., BW., EB., HWK., MIC. and DR. respectively represent Building (Spring), Building (Winter), Exhibition Building, Heated Water Kettle, Melting Ice_Cup and Double Robot. ](https://github.com/mzzcdf/Thermal3DGS/blob/master/pic_and_videos/Comparison_for_ThermoScenes_dataset.png)
 
 ## Comparison Videos Between 3D-GS(Left) and Our Method(Right)
+
+#### Scene UAV1
 ![UAV1](https://github.com/mzzcdf/Thermal3DGS/blob/master/pic_and_videos/UAV1.gif)
+
+#### Scene UAV2
 ![UAV2](https://github.com/mzzcdf/Thermal3DGS/blob/master/pic_and_videos/UAV2.gif)
+
+#### Scene UAV4
 ![UAV4](https://github.com/mzzcdf/Thermal3DGS/blob/master/pic_and_videos/UAV4.gif)
+
+## Model Weights
 
 ## Data Available
