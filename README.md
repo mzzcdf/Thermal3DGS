@@ -1,4 +1,4 @@
-![image](https://github.com/mzzcdf/Thermal3DGS/assets/102453338/efd0b3b6-e89a-48cd-941c-7283b808d1ec)# Thermal3D-GS: Physics-induced 3D Gaussians for Thermal Infrared Novel-view Synthesis
+# Thermal3D-GS: Physics-induced 3D Gaussians for Thermal Infrared Novel-view Synthesis
 
 ## News
 
