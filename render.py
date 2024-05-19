@@ -10,7 +10,7 @@
 #
 
 import torch
-from scene import Scene, ATFModel, DCMModel
+from scene import Scene, ATFModel, TCMModel
 import os
 from tqdm import tqdm
 from os import makedirs
@@ -27,7 +27,7 @@ import math
 import time
 
 
-def render_set(model_path, load2gpt_on_the_fly, name, iteration, views, gaussians, pipeline, background, ATF, DCM):
+def render_set(model_path, load2gpt_on_the_fly, name, iteration, views, gaussians, pipeline, background, ATF, TCM):
     render_path = os.path.join(model_path, name, "ours_{}".format(iteration), "renders")
     gts_path = os.path.join(model_path, name, "ours_{}".format(iteration), "gt")
     depth_path = os.path.join(model_path, name, "ours_{}".format(iteration), "depth")
@@ -50,7 +50,7 @@ def render_set(model_path, load2gpt_on_the_fly, name, iteration, views, gaussian
         # cq: end
         results = render(view, gaussians, pipeline, background, d_rgb)
         #import pdb;pdb.set_trace()
-        results['render'] = results['render'] + DCM.step(results['render'])
+        results['render'] = results['render'] + TCM.step(results['render'])
         rendering = results["render"]
         torch.cuda.synchronize()
         end = time.time()
@@ -67,7 +67,7 @@ def render_set(model_path, load2gpt_on_the_fly, name, iteration, views, gaussian
         f.write("Mean time: %.2fms\n"%(np.mean(render_time_list[5:])))
 
 
-def interpolate_time(model_path, load2gpt_on_the_fly, name, iteration, views, gaussians, pipeline, background, ATF, DCM):
+def interpolate_time(model_path, load2gpt_on_the_fly, name, iteration, views, gaussians, pipeline, background, ATF, TCM):
     render_path = os.path.join(model_path, name, "interpolate_{}".format(iteration), "renders")
     depth_path = os.path.join(model_path, name, "interpolate_{}".format(iteration), "depth")
 
@@ -94,7 +94,7 @@ def interpolate_time(model_path, load2gpt_on_the_fly, name, iteration, views, ga
     imageio.mimwrite(os.path.join(render_path, 'video.mp4'), renderings, fps=30, quality=8)
 
 
-def interpolate_all(model_path, load2gpt_on_the_fly, name, iteration, views, gaussians, pipeline, background, ATF, DCM):
+def interpolate_all(model_path, load2gpt_on_the_fly, name, iteration, views, gaussians, pipeline, background, ATF, TCM):
     render_path = os.path.join(model_path, name, "interpolate_all_{}".format(iteration), "renders")
     makedirs(render_path, exist_ok=True)
 
@@ -124,7 +124,7 @@ def interpolate_all(model_path, load2gpt_on_the_fly, name, iteration, views, gau
         abs, sca, d = ATF.step(xyz.detach(), time_input)
         d_rgb = torch.exp((abs + sca) * d)
         results = render(view, gaussians, pipeline, background, d_rgb)
-        results['render'] = results['render'] + DCM.step(results['render'])
+        results['render'] = results['render'] + TCM.step(results['render'])
         rendering = results["render"]
         renderings.append(to8b(rendering.cpu().numpy()))
 
@@ -134,7 +134,7 @@ def interpolate_all(model_path, load2gpt_on_the_fly, name, iteration, views, gau
     renderings = np.stack(renderings, 0).transpose(0, 2, 3, 1)
     imageio.mimwrite(os.path.join(render_path, 'video.mp4'), renderings, fps=30, quality=8)
 
-def interpolate_view_original(model_path, load2gpt_on_the_fly, name, iteration, views, gaussians, pipeline, background, ATF, DCM):
+def interpolate_view_original(model_path, load2gpt_on_the_fly, name, iteration, views, gaussians, pipeline, background, ATF, TCM):
     render_path = os.path.join(model_path, name, "interpolate_hyper_view_{}".format(iteration), "renders")
 
 
@@ -182,7 +182,7 @@ def interpolate_view_original(model_path, load2gpt_on_the_fly, name, iteration, 
 
         results = render(view, gaussians, pipeline, background, d_rgb)
         #import pdb;pdb.set_trace()
-        results['render'] = results['render'] + DCM.step(results['render'])
+        results['render'] = results['render'] + TCM.step(results['render'])
         rendering = results["render"]
         renderings.append(to8b(rendering.cpu().numpy()))
         
@@ -201,8 +201,8 @@ def render_sets(dataset: ModelParams, iteration: int, pipeline: PipelineParams, 
         scene = Scene(dataset, gaussians, load_iteration=iteration, shuffle=False)
         ATF = ATFModel(dataset.is_blender)
         ATF.load_weights(dataset.model_path)
-        DCM = DCMModel()
-        DCM.load_weights(dataset.model_path)
+        TCM = TCMModel()
+        TCM.load_weights(dataset.model_path)
 
         bg_color = [1, 1, 1] if dataset.white_background else [0, 0, 0]
         background = torch.tensor(bg_color, dtype=torch.float32, device="cuda")
@@ -223,12 +223,12 @@ def render_sets(dataset: ModelParams, iteration: int, pipeline: PipelineParams, 
         if not skip_train:
             render_func(dataset.model_path, dataset.load2gpu_on_the_fly, "train", scene.loaded_iter,
                         scene.getTrainCameras(), gaussians, pipeline,
-                        background, ATF, DCM)
+                        background, ATF, TCM)
 
         if not skip_test:
             render_func(dataset.model_path, dataset.load2gpu_on_the_fly, "test", scene.loaded_iter,
                         scene.getTestCameras(), gaussians, pipeline,
-                        background, ATF, DCM)
+                        background, ATF, TCM)
 
 
 if __name__ == "__main__":
