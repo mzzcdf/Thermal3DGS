@@ -267,7 +267,10 @@ python convert.py -s <location> --skip_matching [--resize] #If not resizing, Ima
 ![UAV4](https://github.com/mzzcdf/Thermal3DGS/blob/master/pic_and_videos/UAV4.gif)
 
 ## Model Weights
+#### To facilitate evaluation and reproducibility, the training weights based on the ThermoScenes dataset have been made publicly available at the following URL. This includes the results of 7k and 30k iterations for both 3D-GS and the proposed method.
+#### Model Weights Link: https://drive.google.com/drive/folders/1pYHK8Ye2NJyggrAslcI1e-i7YIYuqtzi?usp=drive_link
+
 
 ## Data Available
-#### 6 scenes in TI-NSD has been presented in following link, including 2 indoor scenes(Heated and Wall), 2 outdoor scenes(Tall_Building and Basketball_Court) and 2 UAV scenes(UAV1 and UAV2)!!
+#### 6 scenes in TI-NSD has been presented in following URL, including 2 indoor scenes(Heated and Wall), 2 outdoor scenes(Tall_Building and Basketball_Court) and 2 UAV scenes(UAV1 and UAV2)!!
 #### Dataset Link: https://drive.google.com/drive/folders/1scp7-dB0BVE84ra8KkgQ7z9zLk5yCPFH?usp=drive_link
