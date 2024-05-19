@@ -40,12 +40,12 @@ class NorConv1(nn.Module):
         x = self.activation(x)
         return x
 
-class DCMNetwork(nn.Module):
+class TCMNetwork(nn.Module):
     def __init__(self):  # t_multires 6 for D-NeRF; 10 for HyperNeRF
-        super(DCMNetwork, self).__init__()
-        self.DCM = ReshapeConv()
-        self.DCM1 = NorConv()
-        self.DCM2 = NorConv()
+        super(TCMNetwork, self).__init__()
+        self.TCM = ReshapeConv()
+        self.TCM1 = NorConv()
+        self.TCM2 = NorConv()
 
 
     def forward(self, x):
@@ -66,9 +66,9 @@ class DCMNetwork(nn.Module):
         
         x1 = torch.cat((torch.unsqueeze(x[0], dim=0), second_order_edge), dim=0)
         #import pdb;pdb.set_trace()
-        x2 = self.DCM(x1) 
-        x3 = self.DCM1(x2)
-        rad = self.DCM2(x3)
+        x2 = self.TCM(x1) 
+        x3 = self.TCM1(x2)
+        rad = self.TCM2(x3)
         
         #x2 = x[0] + rad
 
