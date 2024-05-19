@@ -17,7 +17,7 @@ from random import randint
 from utils.loss_utils import l1_loss, ssim, kl_divergence, corners_loss
 from gaussian_renderer import render, network_gui
 import sys
-from scene import Scene, GaussianModel, ATFModel, DCMModel
+from scene import Scene, GaussianModel, ATFModel, TCMModel
 from utils.general_utils import safe_state, get_linear_noise_func
 import uuid
 from tqdm import tqdm
@@ -39,8 +39,8 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations):
     ATF = ATFModel(dataset.is_blender)
     ATF.train_setting(opt)
     #modified
-    DCM = DCMModel()
-    DCM.train_setting(opt)
+    TCM = TCMModel()
+    TCM.train_setting(opt)
 
     scene = Scene(dataset, gaussians)
     gaussians.training_setup(opt)
@@ -124,13 +124,13 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations):
 #            k = 1/(50000 - 2*opt.warm_up)*(iteration - 2*opt.warm_up)
 #        else:
 #            k = 0
-#        #image = image + k*DCM.step(image)
+#        #image = image + k*TCM.step(image)
 #        #if iteration >= 10000:
 ##            k = 1/(opt.iterations - 10000)*(iteration - 10000)
-##            image = image + k*DCM.step(image)
+##            image = image + k*TCM.step(image)
 ##        elif iteration >20000:
 ##            k = 1
-        image = image + DCM.step(image)
+        image = image + TCM.step(image)
         # cq:
         c_loss = corners_loss(image, gt_image)
         #import pdb;pdb.set_trace()
@@ -163,7 +163,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations):
             # Log and save
             cur_psnr = training_report(tb_writer, iteration, Ll1, loss, l1_loss, iter_start.elapsed_time(iter_end),
                                        testing_iterations, scene, render, (pipe, background), ATF,
-                                       DCM, dataset.load2gpu_on_the_fly)
+                                       TCM, dataset.load2gpu_on_the_fly)
             if iteration in testing_iterations:
                 if cur_psnr.item() > best_psnr:
                     best_psnr = cur_psnr.item()
@@ -173,7 +173,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations):
                 print("\n[ITER {}] Saving Gaussians".format(iteration))
                 scene.save(iteration)
                 ATF.save_weights(args.model_path, iteration)
-                DCM.save_weights(args.model_path, iteration)
+                TCM.save_weights(args.model_path, iteration)
 
             # Densification
             if iteration < opt.densify_until_iter:
@@ -192,12 +192,12 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations):
                 gaussians.optimizer.step()
                 gaussians.update_learning_rate(iteration)
                 ATF.optimizer.step()
-                DCM.optimizer.step()
+                TCM.optimizer.step()
                 gaussians.optimizer.zero_grad(set_to_none=True)
                 ATF.optimizer.zero_grad()
                 ATF.update_learning_rate(iteration)
-                DCM.optimizer.zero_grad()
-                DCM.update_learning_rate(iteration)
+                TCM.optimizer.zero_grad()
+                TCM.update_learning_rate(iteration)
 
     print("Best PSNR = {} in Iteration {}".format(best_psnr, best_iteration))
 
@@ -226,7 +226,7 @@ def prepare_output_and_logger(args):
 
 
 def training_report(tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_iterations, scene: Scene, renderFunc,
-                    renderArgs, ATF, DCM, load2gpu_on_the_fly):
+                    renderArgs, ATF, TCM, load2gpu_on_the_fly):
     if tb_writer:
         tb_writer.add_scalar('train_loss_patches/l1_loss', Ll1.item(), iteration)
         tb_writer.add_scalar('train_loss_patches/total_loss', loss.item(), iteration)
@@ -272,7 +272,7 @@ def training_report(tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_i
 #                    #modified
 ##                    if iteration >= 5000:
 ##                        k = 1/(50000 - 5000)*(iteration - 5000)
-##                        image = image + k*DCM.step(image)
+##                        image = image + k*TCM.step(image)
 #                    if iteration >= 0:
 ##            if iteration >= 40000:
 ##                k = 1
@@ -280,8 +280,8 @@ def training_report(tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_i
 #                        k = 1/(50000 - 0)*(iteration - 0)
 #                    else:
 #                        k = 0
-#                    #image = image + k*DCM.step(image)
-                    image = image + DCM.step(image)
+#                    #image = image + k*TCM.step(image)
+                    image = image + TCM.step(image)
                     gt_image = torch.clamp(viewpoint.original_image.to("cuda"), 0.0, 1.0)
                     images = torch.cat((images, image.unsqueeze(0)), dim=0)
                     gts = torch.cat((gts, gt_image.unsqueeze(0)), dim=0)
