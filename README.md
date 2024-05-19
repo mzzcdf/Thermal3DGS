@@ -1,4 +1,4 @@
-# Thermal3D-GS: Physics-induced 3D Gaussians for Thermal Infrared Novel-view Synthesis
+![image](https://github.com/mzzcdf/Thermal3DGS/assets/102453338/efd0b3b6-e89a-48cd-941c-7283b808d1ec)# Thermal3D-GS: Physics-induced 3D Gaussians for Thermal Infrared Novel-view Synthesis
 
 ## News
 
@@ -269,3 +269,5 @@ python convert.py -s <location> --skip_matching [--resize] #If not resizing, Ima
 ## Model Weights
 
 ## Data Available
+6 scenes in TI-NSD has been presented in following link, including 2 indoor scenes(Heated and Wall), 2 outdoor scenes(Tall_Building and Basketball_Court) and 2 UAV scenes(UAV1 and UAV2)!!
+dataset link: https://drive.google.com/drive/folders/1scp7-dB0BVE84ra8KkgQ7z9zLk5yCPFH?usp=drive_link
