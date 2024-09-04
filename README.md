@@ -276,5 +276,13 @@ python convert.py -s <location> --skip_matching [--resize] #If not resizing, Ima
 #### 6 scenes in TI-NSD has been presented in following URL, including 2 indoor scenes(Heated and Wall), 2 outdoor scenes(Tall_Building and Basketball_Court) and 2 UAV scenes(UAV1 and UAV2)!!
 #### Dataset Link: https://drive.google.com/drive/folders/1scp7-dB0BVE84ra8KkgQ7z9zLk5yCPFH?usp=drive_link
 
-##Citation
-
+## Citation
+```
+@inproceedings{chen2024thermal3dgs,
+  title={Thermal3D-GS: Physics-induced 3D Gaussians for
+Thermal Infrared Novel-view Synthesis},
+  author={Chen, Qian and Shu, shihao and Bai, Xiangzhi},
+  booktitle={European Conference on Computer Vision},
+  year={2024}
+}
+```
