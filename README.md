@@ -275,3 +275,6 @@ python convert.py -s <location> --skip_matching [--resize] #If not resizing, Ima
 ## Data Available
 #### 6 scenes in TI-NSD has been presented in following URL, including 2 indoor scenes(Heated and Wall), 2 outdoor scenes(Tall_Building and Basketball_Court) and 2 UAV scenes(UAV1 and UAV2)!!
 #### Dataset Link: https://drive.google.com/drive/folders/1scp7-dB0BVE84ra8KkgQ7z9zLk5yCPFH?usp=drive_link
+
+##Citation
+
