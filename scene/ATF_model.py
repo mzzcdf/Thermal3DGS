@@ -9,7 +9,7 @@ from utils.general_utils import get_expon_lr_func
 
 class ATFModel:
     def __init__(self, is_blender=False):
-        self.ATF = ATFNetwork(is_blender=is_blender).cuda()
+        self.ATF = ATFNetwork().cuda()
         self.optimizer = None
         self.spatial_lr_scale = 5
 
