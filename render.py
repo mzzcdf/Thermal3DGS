@@ -55,12 +55,10 @@ def render_set(model_path, load2gpt_on_the_fly, name, iteration, views, gaussian
         torch.cuda.synchronize()
         end = time.time()
         render_time_list.append((end-start)*1000)
-        #depth = results["depth"]
-        #depth = depth / (depth.max() + 1e-5)
         gt = view.original_image[0:3, :, :]
         torchvision.utils.save_image(rendering, os.path.join(render_path, '{0:05d}'.format(idx) + ".png"))
         torchvision.utils.save_image(gt, os.path.join(gts_path, '{0:05d}'.format(idx) + ".png"))
-        #torchvision.utils.save_image(depth, os.path.join(depth_path, '{0:05d}'.format(idx) + ".png"))
+        
     with open(os.path.join(model_path, name, 'ours_30000','render_time.txt'), 'w') as f:
         for t in render_time_list:
             f.write("%.2fms\n"%t)

@@ -93,16 +93,14 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations):
         fid = viewpoint_cam.fid
 
         if iteration < opt.warm_up:
-        #if iteration < 100000:
             d_rgb = 1.0
         else:
-            #print('chenqianSB')
+            
             N = gaussians.get_xyz.shape[0]
             time_input = fid.unsqueeze(0).expand(N, -1)
 
-            ast_noise = 0 #if dataset.is_blender else torch.randn(1, 1, device='cuda').expand(N, -1) * time_interval * smooth_term(iteration)
+            ast_noise = 0 
             # cq: start
-            # d_xyz, d_rotation, d_scaling = ATF.step(xyz.detach(), time_input)
             abs, sca, d = ATF.step(gaussians.get_xyz.detach(), time_input + ast_noise)
             d_rgb = torch.exp((abs + sca) * d)
             # cq: end
@@ -111,7 +109,6 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations):
         render_pkg_re = render(viewpoint_cam, gaussians, pipe, background, d_rgb)
         image, viewspace_point_tensor, visibility_filter, radii = render_pkg_re["render"], render_pkg_re[
             "viewspace_points"], render_pkg_re["visibility_filter"], render_pkg_re["radii"]
-        # depth = render_pkg_re["depth"]
 
         # Loss
         gt_image = viewpoint_cam.original_image.cuda()
@@ -257,11 +254,7 @@ def training_report(tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_i
                     xyz = scene.gaussians.get_xyz
                     time_input = fid.unsqueeze(0).expand(xyz.shape[0], -1)
                     # cq: start
-                    #d_xyz, d_rotation, d_scaling = ATF.step(xyz.detach(), time_input)
                     abs, sca, d = ATF.step(xyz.detach(), time_input)
-                    
-                    
-                    
                     d_rgb = torch.exp((abs + sca) * d)
                     #d_rgb = 1.0
                     # cq: end
