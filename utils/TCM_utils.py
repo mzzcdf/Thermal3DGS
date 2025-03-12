@@ -50,27 +50,30 @@ class TCMNetwork(nn.Module):
 
     def forward(self, x):
         img_tensor = x[0]
-        #import pdb;pdb.set_trace()
         grad_x = torch.gradient(img_tensor, dim=1)
         grad_y = torch.gradient(img_tensor, dim=0)
-        #import pdb;pdb.set_trace()
 
 
         grad_x_x = torch.gradient(grad_x[0], dim=1)
         grad_y_y = torch.gradient(grad_y[0], dim=0)
-        #import pdb;pdb.set_trace()
 
         second_order_edge = torch.abs(grad_x_x[0]) + torch.abs(grad_y_y[0])
-        #second_order_edge = grad_x_x[0] + grad_y_y[0]
         second_order_edge = torch.unsqueeze(second_order_edge, dim=0)
         
         x1 = torch.cat((torch.unsqueeze(x[0], dim=0), second_order_edge), dim=0)
-        #import pdb;pdb.set_trace()
+
+        # For nn.Conv2d() with broadcasting mechanism, used in the original paper
         x2 = self.TCM(x1) 
         x3 = self.TCM1(x2)
         rad = self.TCM2(x3)
+
+
+        # For nn.Conv2d() without broadcasting mechanism
+        # X1 = x1.unsqueeze(0)
+        # x2 = self.TCM(x1) 
+        # x3 = self.TCM1(x2)
+        # rad = self.TCM2(x3).squeeze(0)
         
-        #x2 = x[0] + rad
 
         return torch.cat([rad] * 3, dim=0)
         
