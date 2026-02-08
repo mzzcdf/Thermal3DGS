@@ -1,6 +1,7 @@
 # Thermal3D-GS: Physics-induced 3D Gaussians for Thermal Infrared Novel-view Synthesis
 
 ## News
+- **[2/8/2026]** This work has been accepted by TPAMI2026!!!
 - **[3/7/2025]** Based on our ECCV 2024 paper, we have expanded the dataset and developed new methods！ The new code and data will be released after acceptance！
 - **[7/1/2024]** This work has been accepted by ECCV2024!!!
 - **[5/19/2024]** Updated the code and modified some variable names to facilitate direct replication using the model weights provided in the link below.
@@ -287,3 +288,4 @@ Thermal Infrared Novel-view Synthesis},
   year={2024}
 }
 ```
+
